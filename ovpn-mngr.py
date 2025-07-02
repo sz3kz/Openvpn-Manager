@@ -74,7 +74,31 @@ def available():
         send("CONTINUE")
         file = receive()
         print(f" - {file}")
-    print("Command succeeded")
+    print("Command succeeded.")
+
+def upload():
+    if len(sys.argv) != 4:
+        print("Invalid command format.")
+        sys.exit(1)
+    path = sys.argv[2]
+    newname = sys.argv[3]
+    print("Valid command format.")
+    send('UPLOAD')
+    response = receive()
+    if not response == 'PATH?':
+        print("Command failed.")
+        sys.exit(1)
+    send(f"{path}")
+    response = receive()
+    if not response == 'NEWNAME?':
+        print("Command failed.")
+        sys.exit(1)
+    send(f"{newname}")
+    response = receive()
+    if response != 'SUCCESS':
+        print("Command failed.")
+        sys.exit(1)
+    print("Command succeeded.")
 
 
 
@@ -93,7 +117,7 @@ def main():
         case 'available':
             available()
         case 'upload':
-            pass
+            upload()
         case 'delete':
             pass
         case 'current':
