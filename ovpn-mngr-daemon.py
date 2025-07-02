@@ -14,11 +14,11 @@ def respond(message):
         output_pipe.write(f"{message}")
 
 def terminate():
+    respond("TERMINATED")
     for pipe in [INPUT_PIPE, OUTPUT_PIPE]:
         os.remove(f"{pipe}")
         print(f"Pipe {pipe} removed.")
     print("Terminated")
-    respond("TERMINATED")
     sys.exit(0)
 
 def status():
