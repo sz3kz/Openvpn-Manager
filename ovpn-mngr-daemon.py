@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import os
 import sys
+import shutil
 
 ROOT_PIPE_DIR="/var/run"
 INPUT_PIPE=f"{ROOT_PIPE_DIR}/ovpn-mngr-server.pipe"
@@ -46,6 +47,23 @@ def available():
         respond(f"{file}")
     print("Listing done.")
 
+def upload():
+    respond("PATH?")
+    path = receive()
+    if not os.path.exists(path):
+        print(f"User supplied ovpn file: \'{path}\' does not exist.")
+        respond("ERROR:INVALIDFILE")
+        return
+    respond("NEWNAME?")
+    newpath= receive()
+    newname = os.path.basename(newpath)
+    if os.path.exists(f"{VPN_DIR}/{newname}"):
+        print("User supplied ovpn file name already exists.")
+        respond("ERROR:FILEEXISTS")
+        return
+    shutil.copy(f"{path}",f"{VPN_DIR}/{newname}")
+    respond("SUCCESS")
+
 
 if os.geteuid() != 0:
     print(f"Insufficient privileges.")
@@ -73,5 +91,8 @@ while True:
             status()
         case "AVAILABLE":
             available()
+        case "UPLOAD":
+            upload()
         case _:
             print(f"ERROR: command \'{command}\' not supported.")
+            respond("ERROR:INVALIDCOMMAND")
