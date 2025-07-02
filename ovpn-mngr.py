@@ -100,6 +100,25 @@ def upload():
         sys.exit(1)
     print("Command succeeded.")
 
+def delete():
+    if len(sys.argv) != 3:
+        print("Invalid command format.")
+        sys.exit(1)
+    file = sys.argv[2]
+    send('DELETE')
+    response = receive()
+    if not response == 'NAME?':
+        print("Command failed.")
+        sys.exit(1)
+    send(f'{file}')
+    response = receive()
+    if not response == 'SUCCESS':
+        print("Command failed.")
+        sys.exit(1)
+    print("Command succeeded.")
+
+
+
 
 
 def main():
@@ -119,7 +138,7 @@ def main():
         case 'upload':
             upload()
         case 'delete':
-            pass
+            delete()
         case 'current':
             pass
         case 'select':
