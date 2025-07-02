@@ -3,11 +3,11 @@
 import sys
 
 ROOT_PIPE_DIR="/var/run"
-INPUT_PIPE=f"{ROOT_PIPE_DIR}/ovpn-mngr-client.pipe"
 OUTPUT_PIPE=f"{ROOT_PIPE_DIR}/ovpn-mngr-server.pipe"
+INPUT_PIPE=f"{ROOT_PIPE_DIR}/ovpn-mngr-client.pipe"
 
 
-def respond(message):
+def send(message):
     with open(f"{OUTPUT_PIPE}", 'w') as output_pipe:
         output_pipe.write(f"{message}")
 
@@ -16,6 +16,20 @@ def receive():
         response = input_pipe.read().strip()
     return response
 
+def terminate():
+    if len(sys.argv) != 2:
+        print("Invalid command format.")
+        sys.exit(1)
+    print("Valid command format.")
+    send('TERMINATE')
+    print("Terminate sent")
+    response = receive()
+    if response == "TERMINATED":
+        print("Command succeeded!")
+        return
+    print("Command failed.")
+
+
 def main():
     if len(sys.argv) == 1:
         print("No command found!")
@@ -23,7 +37,7 @@ def main():
     command = sys.argv[1]
     match command:
         case 'terminate':
-            pass
+            terminate()
         case 'status':
             pass
         case 'available':
