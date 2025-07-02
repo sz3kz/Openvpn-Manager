@@ -9,6 +9,8 @@ OUTPUT_PIPE=f"{ROOT_PIPE_DIR}/ovpn-mngr-client.pipe"
 
 ROOT_MNGR_DIR="/root/.openvpn-management"
 VPN_DIR=f"{ROOT_MNGR_DIR}/vpns"
+VPN_LINK=f"{ROOT_MNGR_DIR}/current"
+
 
 def respond(message):
     with open(f"{OUTPUT_PIPE}", 'w') as output_pipe:
@@ -55,7 +57,7 @@ def upload():
         respond("ERROR:INVALIDFILE")
         return
     respond("NEWNAME?")
-    newpath= receive()
+    newpath = receive()
     newname = os.path.basename(newpath)
     if os.path.exists(f"{VPN_DIR}/{newname}"):
         print("User supplied ovpn file name already exists.")
@@ -63,6 +65,14 @@ def upload():
         return
     shutil.copy(f"{path}",f"{VPN_DIR}/{newname}")
     respond("SUCCESS")
+
+def current():
+    if not os.path.exists(f"{VPN_LINK}"):
+        respond("ERROR:NOFILESELECTED")
+        return
+    current_path = os.readlink(f"{VPN_LINK}")
+    current_file = os.path.basename(f"{current_path}")
+    respond(f"{current_file}")
 
 
 if os.geteuid() != 0:
@@ -93,6 +103,8 @@ while True:
             available()
         case "UPLOAD":
             upload()
+        case "CURRENT":
+            current()
         case _:
             print(f"ERROR: command \'{command}\' not supported.")
             respond("ERROR:INVALIDCOMMAND")
