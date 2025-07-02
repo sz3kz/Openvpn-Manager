@@ -6,6 +6,13 @@ ROOT_PIPE_DIR="/var/run"
 INPUT_PIPE=f"{ROOT_PIPE_DIR}/ovpn-mngr-server.pipe"
 OUTPUT_PIPE=f"{ROOT_PIPE_DIR}/ovpn-mngr-client.pipe"
 
+def terminate():
+    for pipe in [INPUT_PIPE, OUTPUT_PIPE]:
+        os.remove(f"{pipe}")
+        print(f"Pipe {pipe} removed.")
+    print("Terminated")
+    sys.exit(0)
+
 
 if os.geteuid() != 0:
     print(f"Insufficient privileges.")
@@ -27,7 +34,6 @@ while True:
         print(f"Command: \'{command}\'")
     match command:
         case "TERMINATE":
-            print(f"Terminating!")
-            sys.exit(0)
+            terminate()
         case _:
             print(f"ERROR: command \'{command}\' not supported.")
