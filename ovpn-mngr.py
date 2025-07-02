@@ -159,8 +159,16 @@ def connect():
     print("Command succeeded.")
 
 
-
-
+def disconnect():
+    if not len(sys.argv) == 2:
+        print("Invalid command format.")
+        sys.exit(1)
+    send('DISCONNECT')
+    response = receive()
+    if not response == 'SUCCESS':
+        print("Command failed.")
+        sys.exit(1)
+    print("Command succeeded.")
 
 
 
@@ -190,7 +198,7 @@ def main():
         case 'connect':
             connect()
         case 'disconnect':
-            pass
+            disconnect()
         case _:
             print(f"Error: unrecognized command: \'{command}\'")
 
