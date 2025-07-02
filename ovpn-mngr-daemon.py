@@ -100,7 +100,8 @@ def delete():
 
 def current():
     print("#### Client queried for currently selected vpn file.")
-    if not os.path.exists(f"{VPN_LINK}"):
+    if not ( os.path.exists(f"{VPN_LINK}") ):       # this also takes care of broken links
+        print(f"Symbolic link does not exist: \'{VPN_LINK}\'.")
         respond("ERROR:NOFILESELECTED")
         return
     current_path = os.readlink(f"{VPN_LINK}")
