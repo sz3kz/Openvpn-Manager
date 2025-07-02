@@ -147,6 +147,18 @@ def select():
     print("Command succeeded.")
 
 
+def connect():
+    if not len(sys.argv) == 2:
+        print("Invalid command format.")
+        sys.exit(1)
+    send('CONNECT')
+    response = receive()
+    if not response == 'SUCCESS':
+        print("Command failed.")
+        sys.exit(1)
+    print("Command succeeded.")
+
+
 
 
 
@@ -176,7 +188,7 @@ def main():
         case 'select':
             select()
         case 'connect':
-            pass
+            connect()
         case 'disconnect':
             pass
         case _:
