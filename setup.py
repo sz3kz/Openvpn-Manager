@@ -2,7 +2,7 @@
 import os
 import sys
 
-ROOT_DIRECTORY="/root/.openvpn-management/"
+ROOT_DIRECTORY="/root/.openvpn-management"
 
 if os.geteuid() != 0:
     print(f"Insufficient privileges.")
@@ -17,8 +17,8 @@ else:
     print(f"\"{ROOT_DIRECTORY}\" created.")
 
 
-if os.path.exists(f"{ROOT_DIRECTORY}vpns"):
-    print(f"\"{ROOT_DIRECTORY}vpns\" already exists.")
+if os.path.exists(f"{ROOT_DIRECTORY}/vpns"):
+    print(f"\"{ROOT_DIRECTORY}/vpns\" already exists.")
 else:
-    os.makedirs(f"{ROOT_DIRECTORY}vpns")
-    print(f"\"{ROOT_DIRECTORY}vpns\" created.")
+    os.makedirs(f"{ROOT_DIRECTORY}/vpns")
+    print(f"\"{ROOT_DIRECTORY}/vpns\" created.")
