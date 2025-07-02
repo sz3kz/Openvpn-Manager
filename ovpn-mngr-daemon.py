@@ -67,17 +67,21 @@ def upload():
         print(f"Non-existant source file denoted: \'{src_path}\'.")
         respond("ERROR:INVALIDFILE")
         return
-    print("Source file : \'{src_path}\'")
+    if not os.path.isfile(src_path):
+        print(f"Non-file path denoted: \'{src_path}\'")
+        respond("ERROR:NOTAFILE")
+        return
+    print(f"Source file : \'{src_path}\'")
     respond("NEWNAME?")
     dst_path_user = receive()
     dst_name = os.path.basename(dst_path_user)
     dst_path = f"{VPN_DIR}/{dst_name}"
     if os.path.exists(f"{dst_path}"):
-        print("Already existant vpn file denoted: \'{dst_path}\'.")
+        print(f"Already existant vpn file denoted: \'{dst_path}\'.")
         respond("ERROR:FILEEXISTS")
         return
-    print("Target file : \'{dst_path}\'.")
-    shutil.copy(f"{path}",f"{dst_path}")
+    print(f"Target file : \'{dst_path}\'.")
+    shutil.copy(f"{src_path}",f"{dst_path}")
     print("Copied source file to target file.")
     respond("SUCCESS")
 
