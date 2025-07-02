@@ -173,36 +173,40 @@ def disconnect():
     print("Daemon deactivated.")
     respond("SUCCESS")
 
+def main():
 
-check_root_privileges()
+    check_root_privileges()
 
-setup_pipes()
+    setup_pipes()
 
-connection_active = False
-process = None
-while True:
-    print("Command loop started.")
-    command = receive()
-    print(f"Command received: \'{command}\'.")
-    match command:
-        case "TERMINATE":
-            terminate()
-        case "STATUS":
-            status()
-        case "AVAILABLE":
-            available()
-        case "UPLOAD":
-            upload()
-        case "DELETE":
-            delete()
-        case "CURRENT":
-            current()
-        case "SELECT":
-            select()
-        case "CONNECT":
-            connect()
-        case "DISCONNECT":
-            disconnect()
-        case _:
-            print(f"Command \'{command}\' not supported.")
-            respond("ERROR:INVALIDCOMMAND")
+    connection_active = False
+    process = None
+    while True:
+        print("Command loop started.")
+        command = receive()
+        print(f"Command received: \'{command}\'.")
+        match command:
+            case "TERMINATE":
+                terminate()
+            case "STATUS":
+                status()
+            case "AVAILABLE":
+                available()
+            case "UPLOAD":
+                upload()
+            case "DELETE":
+                delete()
+            case "CURRENT":
+                current()
+            case "SELECT":
+                select()
+            case "CONNECT":
+                connect()
+            case "DISCONNECT":
+                disconnect()
+            case _:
+                print(f"Command \'{command}\' not supported.")
+                respond("ERROR:INVALIDCOMMAND")
+
+if __name__ == '__main__':
+    main()
