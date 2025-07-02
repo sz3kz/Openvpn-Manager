@@ -2,6 +2,20 @@
 
 import sys
 
+ROOT_PIPE_DIR="/var/run"
+INPUT_PIPE=f"{ROOT_PIPE_DIR}/ovpn-mngr-client.pipe"
+OUTPUT_PIPE=f"{ROOT_PIPE_DIR}/ovpn-mngr-server.pipe"
+
+
+def respond(message):
+    with open(f"{OUTPUT_PIPE}", 'w') as output_pipe:
+        output_pipe.write(f"{message}")
+
+def receive():
+    with open(f"{INPUT_PIPE}", 'r') as input_pipe:
+        response = input_pipe.read().strip()
+    return response
+
 def main():
     if len(sys.argv) == 1:
         print("No command found!")
