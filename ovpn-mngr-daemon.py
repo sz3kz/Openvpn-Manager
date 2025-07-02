@@ -142,6 +142,7 @@ def select():
     if not os.path.exists(f"{path}"):
         logger.error("Nonexist Selected file: \'{VPN_DIR}/{name}\' does not exist.")
         respond("ERROR:FILEDOESNOTEXIST")
+        return
     logger.info(f"Valid path given: \'{path}\'.")
     os.symlink(f"{VPN_DIR}/{name}", f"{ROOT_MNGR_DIR}/temporarylink")
     os.rename(f"{ROOT_MNGR_DIR}/temporarylink", f"{VPN_LINK}")
