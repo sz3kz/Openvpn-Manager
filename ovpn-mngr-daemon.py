@@ -24,6 +24,23 @@ def receive():
     print(f"    < \'{response}\'")
     return response
 
+def setup_pipes():
+    for pipe in [INPUT_PIPE, OUTPUT_PIPE]:
+        if os.path.exists(f"{pipe}"):
+            print(f"Pipe already exists: \'{pipe}\'.")
+            os.remove(f"{pipe}")
+            print(f"Pipe deleted: \'{pipe}\'.")
+        os.mkfifo(f"{pipe}")
+        print(f"Pipe created: \'{pipe}\'.")
+
+def check_root_privileges():
+    if os.geteuid() != 0:
+        print(f"Insufficient privileges: \'{os.geteuid()}\'.")
+        print(f"{sys.argv[0]} must be ran with root privileges!")
+        sys.exit(1)
+    print(f"Sufficient privileges: \'{os.geteuid()}\'.")
+
+
 def terminate():
     print("#### Client requested termination of daemon.")
     if connection_active:
@@ -104,7 +121,7 @@ def delete():
 
 def current():
     print("#### Client queried for currently selected vpn file.")
-    if not ( os.path.exists(f"{VPN_LINK}") ):       # this also takes care of broken links
+    if not os.path.exists(f"{VPN_LINK}"):       # this also takes care of broken links
         print(f"Symbolic link does not exist: \'{VPN_LINK}\'.")
         respond("ERROR:NOFILESELECTED")
         return
@@ -135,7 +152,7 @@ def connect():
     if connection_active:
         print("Openvpn daemon is already active.")
         respond("ERROR:CONNECTED")
-        return 
+        return
     print("Activating vpn daemon.")
     process = subprocess.Popen(["openvpn", f"{VPN_LINK}"])
     connection_active = True
@@ -157,19 +174,9 @@ def disconnect():
     respond("SUCCESS")
 
 
-if os.geteuid() != 0:
-    print(f"Insufficient privileges: \'{os.geteuid()}\'.")
-    print(f"{sys.argv[0]} must be ran with root privileges!")
-    sys.exit(1)
-print(f"Sufficient privileges: \'{os.geteuid()}\'.")
+check_root_privileges()
 
-for pipe in [INPUT_PIPE, OUTPUT_PIPE]:
-    if os.path.exists(f"{pipe}"):
-        print(f"Pipe already exists: \'{pipe}\'.")
-        os.remove(f"{pipe}")
-        print(f"Pipe deleted: \'{pipe}\'.")
-    os.mkfifo(f"{pipe}")
-    print(f"Pipe created: \'{pipe}\'.")
+setup_pipes()
 
 connection_active = False
 process = None
