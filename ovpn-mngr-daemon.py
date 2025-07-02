@@ -6,11 +6,14 @@ ROOT_PIPE_DIR="/var/run"
 INPUT_PIPE=f"{ROOT_PIPE_DIR}/ovpn-mngr-server.pipe"
 OUTPUT_PIPE=f"{ROOT_PIPE_DIR}/ovpn-mngr-client.pipe"
 
+
 def terminate():
     for pipe in [INPUT_PIPE, OUTPUT_PIPE]:
         os.remove(f"{pipe}")
         print(f"Pipe {pipe} removed.")
     print("Terminated")
+    with open(f"{OUTPUT_PIPE}", 'w') as output_pipe:
+        output_pipe.write("TERMINATED")
     sys.exit(0)
 
 
