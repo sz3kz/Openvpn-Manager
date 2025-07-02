@@ -10,3 +10,8 @@ if os.geteuid() != 0:
     sys.exit(1)
 print("Sufficent privileges.")
 
+if os.path.exists(f"{ROOT_DIRECTORY}"):
+    print(f"\"{ROOT_DIRECTORY}\" already exists.")
+else:
+    os.makedirs(f"{ROOT_DIRECTORY}")
+    print(f"\"{ROOT_DIRECTORY}\" created.")
