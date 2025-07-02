@@ -13,6 +13,11 @@ def respond(message):
     with open(f"{OUTPUT_PIPE}", 'w') as output_pipe:
         output_pipe.write(f"{message}")
 
+def receive():
+    with open(f"{INPUT_PIPE}", 'r') as input_pipe:
+        response = input_pipe.read().strip()
+    return response
+
 def terminate():
     respond("TERMINATED")
     for pipe in [INPUT_PIPE, OUTPUT_PIPE]:
@@ -35,8 +40,7 @@ def available():
     respond(f"{len(files)}")
     for file in files:
         print(f"{file}")
-        with open(f"{INPUT_PIPE}", 'r') as input_pipe:
-            response = input_pipe.read().strip()
+        response = receive()
         if not response == "CONTINUE":
             return None
         respond(f"{file}")
@@ -60,9 +64,8 @@ for pipe in [INPUT_PIPE, OUTPUT_PIPE]:
 connection_active = False
 while True:
     print("Command loop started.")
-    with open(f"{INPUT_PIPE}", 'r') as input_pipe:
-        command = input_pipe.read().strip()
-        print(f"Command: \'{command}\'")
+    command = receive()
+    print(f"Command: \'{command}\'")
     match command:
         case "TERMINATE":
             terminate()
