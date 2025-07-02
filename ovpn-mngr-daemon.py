@@ -23,6 +23,8 @@ def receive():
     return response
 
 def terminate():
+    if connection_active:
+        process.kill()
     respond("TERMINATED")
     for pipe in [INPUT_PIPE, OUTPUT_PIPE]:
         os.remove(f"{pipe}")
@@ -88,8 +90,13 @@ def select():
     respond("SUCCESS")
 
 def connect():
+    global process
     global connection_active
-    subprocess.Popen(["openvpn", f"{VPN_LINK}"])
+    if connection_active:
+        print("Openvpn server already started.")
+        respond("ERROR:CONNECTED")
+        return process
+    process = subprocess.Popen(["openvpn", f"{VPN_LINK}"])
     connection_active = True
     respond("SUCCESS")
 
@@ -110,8 +117,11 @@ for pipe in [INPUT_PIPE, OUTPUT_PIPE]:
     print(f"\'{pipe}\' created.")
 
 connection_active = False
+process = None
 while True:
     print("Command loop started.")
+    print(f"Process: {process}")
+    print(f"connection_active: {connection_active}")
     command = receive()
     print(f"Command: \'{command}\'")
     match command:
