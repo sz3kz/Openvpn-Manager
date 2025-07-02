@@ -16,6 +16,17 @@ def terminate():
         output_pipe.write("TERMINATED")
     sys.exit(0)
 
+def status():
+    if connection_active:
+        print("Connection is active")
+        status_output="CONNECTED"
+    else:
+        print("Connection is not active")
+        status_output="DISCONNECTED"
+
+    with open(f"{OUTPUT_PIPE}",'w') as output_pipe:
+        output_pipe.write(f"{status_output}")
+
 
 if os.geteuid() != 0:
     print(f"Insufficient privileges.")
@@ -31,6 +42,7 @@ for pipe in [INPUT_PIPE, OUTPUT_PIPE]:
     os.mkfifo(f"{pipe}")
     print(f"\'{pipe}\' created.")
 
+connection_active = False
 while True:
     with open(f"{INPUT_PIPE}", 'r') as input_pipe:
         command = input_pipe.read().strip()
@@ -38,5 +50,7 @@ while True:
     match command:
         case "TERMINATE":
             terminate()
+        case "STATUS":
+            status()
         case _:
             print(f"ERROR: command \'{command}\' not supported.")
