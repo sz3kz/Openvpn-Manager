@@ -5,6 +5,7 @@ import shutil
 import subprocess
 import logging
 from termcolor import colored
+import stat
 
 ROOT_PIPE_DIR="/var/run"
 INPUT_PIPE=f"{ROOT_PIPE_DIR}/ovpn-mngr-server.pipe"
@@ -52,7 +53,7 @@ def setup_pipes():
 def check_root_privileges():
     if os.geteuid() != 0:
         logger.error(failure(f"Insufficient privileges: \'{os.geteuid()}\'."))
-        logger.error(failure(f"{sys.argv[0]} must be ran with root privileges!"))
+        logger.error(failure(f"{sys.argv[0]} must be ran with root privileges."))
         sys.exit(1)
     logger.info(success(f"Sufficient privileges: \'{os.geteuid()}\'."))
 
