@@ -99,7 +99,6 @@ def setup_pipes():
 
     Returns:
         None
-
     '''
     for pipe in [INPUT_PIPE, OUTPUT_PIPE]:
         if os.path.exists(f"{pipe}"):
@@ -141,7 +140,7 @@ def terminate():
         None
 
     Responses:
-        'TERMINATED'
+        'TERMINATED': terminated successfully
     '''
     logger.info(inform("#### Client requested termination of daemon."))
     if connection_active:
@@ -223,7 +222,7 @@ def upload():
     Errors:
         'ERROR:INVALIDFILE': given path does not exist
         'ERROR:NOTAFILE': given path does not point to a file
-        'ERROR:FILEEXISTS: given preferred basename already exists in VPN_DIR'
+        'ERROR:FILEEXISTS: given preferred basename already exists in VPN_DIR
     '''
     logger.info(inform("#### Client requested a vpn file upload."))
     respond("PATH?")
@@ -266,7 +265,6 @@ def delete():
 
     Errors:
         'ERROR:FILEDOESNOTEXIST': denoted file does not exist.
-
     '''
     logger.info(inform("#### Client requested a vpn file deletion."))
     respond("NAME?")
@@ -300,7 +298,6 @@ def current():
 
     Errors:
         'ERROR:NOFILESELECTED': symbolic link either does not exist or is broken.
-
     '''
     logger.info(inform("#### Client queried for currently selected vpn file."))
     if not os.path.exists(f"{VPN_LINK}"):       # this also takes care of broken links
