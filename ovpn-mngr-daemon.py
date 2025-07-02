@@ -81,6 +81,23 @@ def upload():
     print("Copied source file to target file.")
     respond("SUCCESS")
 
+def delete():
+    print("#### Client requested a vpn file deletion.")
+    respond("NAME?")
+    target_path_user = receive()
+    target_name = os.path.basename(target_path_user)
+    target_path = f"{VPN_DIR}/{target_name}"
+    if not os.path.exists(f"{target_path}"):
+        print("Non-existant vpn file denoted: \'{target_path}\'.")
+        respond("ERROR:FILEDOESNOTEXIST")
+        return
+    print("File to be deleted: \'{target_path}\'.")
+    os.remove(f"{target_path}")
+    print("File deleted.")
+    respond("SUCCESS")
+
+
+
 def current():
     print("#### Client queried for currently selected vpn file.")
     if not os.path.exists(f"{VPN_LINK}"):
@@ -164,6 +181,8 @@ while True:
             available()
         case "UPLOAD":
             upload()
+        case "DELETE":
+            delete()
         case "CURRENT":
             current()
         case "SELECT":
