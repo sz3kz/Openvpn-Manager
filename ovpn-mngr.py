@@ -13,10 +13,17 @@ def send(message):
     with open(f"{OUTPUT_PIPE}", 'w') as output_pipe:
         output_pipe.write(f"{message}")
 
+
 def receive():
     with open(f"{INPUT_PIPE}", 'r') as input_pipe:
         response = input_pipe.read().strip()
     return response
+
+
+def check_root_privileges():
+    if os.geteuid() != 0:
+        print("Run client with root privileges.")
+        sys.exit(1)
 
 def check_pipes():
     for pipe in [INPUT_PIPE, OUTPUT_PIPE]:
@@ -38,11 +45,6 @@ def terminate():
         return
     print("ERROR: Command failed.")
 
-
-def check_root_privileges():
-    if os.geteuid() != 0:
-        print("Run client with root privileges.")
-        sys.exit(1)
 
 
 def main():
