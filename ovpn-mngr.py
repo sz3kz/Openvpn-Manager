@@ -118,6 +118,17 @@ def delete():
     print("Command succeeded.")
 
 
+def current():
+    if len(sys.argv) != 2:
+        print("Invalid command format.")
+        sys.exit(1)
+    send('CURRENT')
+    file = receive()
+    if file == "ERROR:NOFILESELECTED":
+        print("No file has been selected.")
+    print(f"Current selected file: {file}")
+
+
 
 
 
@@ -140,7 +151,7 @@ def main():
         case 'delete':
             delete()
         case 'current':
-            pass
+            current()
         case 'select':
             pass
         case 'connect':
