@@ -15,3 +15,10 @@ if os.path.exists(f"{ROOT_DIRECTORY}"):
 else:
     os.makedirs(f"{ROOT_DIRECTORY}")
     print(f"\"{ROOT_DIRECTORY}\" created.")
+
+
+if os.path.exists(f"{ROOT_DIRECTORY}vpns"):
+    print(f"\"{ROOT_DIRECTORY}vpns\" already exists.")
+else:
+    os.makedirs(f"{ROOT_DIRECTORY}vpns")
+    print(f"\"{ROOT_DIRECTORY}vpns\" created.")
