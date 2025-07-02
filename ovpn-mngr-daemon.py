@@ -24,12 +24,10 @@ def terminate():
 def status():
     if connection_active:
         print("Connection is active")
-        status_output="CONNECTED"
+        respond(f"CONNECTED")
     else:
         print("Connection is not active")
-        status_output="DISCONNECTED"
-
-    respond(f"{status_output}")
+        respond(f"DISCONNECTED")
 
 def available():
     files = os.listdir(f"{VPN_DIR}")
