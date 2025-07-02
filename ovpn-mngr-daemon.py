@@ -9,14 +9,16 @@ OUTPUT_PIPE=f"{ROOT_PIPE_DIR}/ovpn-mngr-client.pipe"
 ROOT_MNGR_DIR="/root/.openvpn-management"
 VPN_DIR=f"{ROOT_MNGR_DIR}/vpns"
 
+def respond(message):
+    with open(f"{OUTPUT_PIPE}", 'w') as output_pipe:
+        output_pipe.write(f"{message}")
 
 def terminate():
     for pipe in [INPUT_PIPE, OUTPUT_PIPE]:
         os.remove(f"{pipe}")
         print(f"Pipe {pipe} removed.")
     print("Terminated")
-    with open(f"{OUTPUT_PIPE}", 'w') as output_pipe:
-        output_pipe.write("TERMINATED")
+    respond("TERMINATED")
     sys.exit(0)
 
 def status():
@@ -27,22 +29,19 @@ def status():
         print("Connection is not active")
         status_output="DISCONNECTED"
 
-    with open(f"{OUTPUT_PIPE}",'w') as output_pipe:
-        output_pipe.write(f"{status_output}")
+    respond(f"{status_output}")
 
 def available():
     files = os.listdir(f"{VPN_DIR}")
     print(f"{len(files)} files available.")
-    with open(f"{OUTPUT_PIPE}", 'w') as output_pipe:
-        output_pipe.write(f"{len(files)}")
+    respond(f"{len(files)}")
     for file in files:
         print(f"{file}")
         with open(f"{INPUT_PIPE}", 'r') as input_pipe:
             response = input_pipe.read().strip()
         if not response == "CONTINUE":
             return None
-        with open(f"{OUTPUT_PIPE}", 'w') as output_pipe:
-            output_pipe.write(f"{file}")
+        respond(f"{file}")
     print("Listing done.")
 
 
