@@ -25,6 +25,7 @@ def check_root_privileges():
         print("Run client with root privileges.")
         sys.exit(1)
 
+
 def check_pipes():
     for pipe in [INPUT_PIPE, OUTPUT_PIPE]:
         if not os.path.exists(f"{pipe}"):
@@ -46,6 +47,22 @@ def terminate():
     print("ERROR: Command failed.")
 
 
+def status():
+    if len(sys.argv) != 2:
+        print("Invalid command format.")
+        sys.exit(1)
+    print("Valid command format.")
+    send('STATUS')
+    print("STATUS sent")
+    response = receive()
+    if response == "CONNECTED":
+        print("Connection live.")
+    elif response == "DISCONNECTED":
+        print("No connection.")
+    else:
+        print("ERROR: Command failed.")
+
+
 
 def main():
     check_root_privileges()
@@ -58,7 +75,7 @@ def main():
         case 'terminate':
             terminate()
         case 'status':
-            pass
+            status()
         case 'available':
             pass
         case 'upload':
