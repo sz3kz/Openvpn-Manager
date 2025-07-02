@@ -93,13 +93,23 @@ def connect():
     global process
     global connection_active
     if connection_active:
-        print("Openvpn server already started.")
+        print("Openvpn daemon already started.")
         respond("ERROR:CONNECTED")
-        return process
+        return 
     process = subprocess.Popen(["openvpn", f"{VPN_LINK}"])
     connection_active = True
     respond("SUCCESS")
 
+def disconnect():
+    global process
+    global connection_active
+    if not connection_active:
+        print("Openvpn daemon is not running.")
+        respond("ERROR:DISCONNECTED")
+        return
+    process.kill()
+    connection_active = False
+    respond("SUCCESS")
 
 
 if os.geteuid() != 0:
@@ -139,6 +149,8 @@ while True:
             select()
         case "CONNECT":
             connect()
+        case "DISCONNECT":
+            disconnect()
         case _:
             print(f"ERROR: command \'{command}\' not supported.")
             respond("ERROR:INVALIDCOMMAND")
