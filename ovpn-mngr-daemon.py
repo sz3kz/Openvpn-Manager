@@ -25,3 +25,9 @@ while True:
     with open(f"{INPUT_PIPE}", 'r') as input_pipe:
         command = input_pipe.read().strip()
         print(f"Command: \'{command}\'")
+    match command:
+        case "TERMINATE":
+            print(f"Terminating!")
+            sys.exit(0)
+        case _:
+            print(f"ERROR: command \'{command}\' not supported.")
