@@ -6,6 +6,9 @@ ROOT_PIPE_DIR="/var/run"
 INPUT_PIPE=f"{ROOT_PIPE_DIR}/ovpn-mngr-server.pipe"
 OUTPUT_PIPE=f"{ROOT_PIPE_DIR}/ovpn-mngr-client.pipe"
 
+ROOT_MNGR_DIR="/root/.openvpn-management"
+VPN_DIR=f"{ROOT_MNGR_DIR}/vpns"
+
 
 def terminate():
     for pipe in [INPUT_PIPE, OUTPUT_PIPE]:
@@ -27,6 +30,21 @@ def status():
     with open(f"{OUTPUT_PIPE}",'w') as output_pipe:
         output_pipe.write(f"{status_output}")
 
+def available():
+    files = os.listdir(f"{VPN_DIR}")
+    print(f"{len(files)} files available.")
+    with open(f"{OUTPUT_PIPE}", 'w') as output_pipe:
+        output_pipe.write(f"{len(files)}")
+    for file in files:
+        print(f"{file}")
+        with open(f"{INPUT_PIPE}", 'r') as input_pipe:
+            response = input_pipe.read().strip()
+        if not response == "CONTINUE":
+            return None
+        with open(f"{OUTPUT_PIPE}", 'w') as output_pipe:
+            output_pipe.write(f"{file}")
+    print("Listing done.")
+
 
 if os.geteuid() != 0:
     print(f"Insufficient privileges.")
@@ -44,6 +62,7 @@ for pipe in [INPUT_PIPE, OUTPUT_PIPE]:
 
 connection_active = False
 while True:
+    print("Command loop started.")
     with open(f"{INPUT_PIPE}", 'r') as input_pipe:
         command = input_pipe.read().strip()
         print(f"Command: \'{command}\'")
@@ -52,5 +71,7 @@ while True:
             terminate()
         case "STATUS":
             status()
+        case "AVAILABLE":
+            available()
         case _:
             print(f"ERROR: command \'{command}\' not supported.")
