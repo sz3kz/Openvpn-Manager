@@ -57,17 +57,17 @@ def status():
     print("#### Client queried status of connection.")
     if connection_active:
         print("Connection is active.")
-        respond(f"CONNECTED")
+        respond("CONNECTED")
     else:
         print("Connection is not active.")
-        respond(f"DISCONNECTED")
+        respond("DISCONNECTED")
 
 def available():
     print("#### Client requested a listing of available vpn files.")
     files = os.listdir(f"{VPN_DIR}")
     print(f"Files available: {len(files)}.")
     respond(f"{len(files)}")
-    print(f"Listing files:")
+    print("Listing files:")
     for file in files:
         print(f" - \'{file}\'")
         response = receive()
