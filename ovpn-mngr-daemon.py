@@ -2,6 +2,7 @@
 import os
 import sys
 import shutil
+import subprocess
 
 ROOT_PIPE_DIR="/var/run"
 INPUT_PIPE=f"{ROOT_PIPE_DIR}/ovpn-mngr-server.pipe"
@@ -86,6 +87,13 @@ def select():
     print("Symbolic link changed.")
     respond("SUCCESS")
 
+def connect():
+    global connection_active
+    subprocess.Popen(["openvpn", f"{VPN_LINK}"])
+    connection_active = True
+    respond("SUCCESS")
+
+
 
 if os.geteuid() != 0:
     print(f"Insufficient privileges.")
@@ -119,6 +127,8 @@ while True:
             current()
         case "SELECT":
             select()
+        case "CONNECT":
+            connect()
         case _:
             print(f"ERROR: command \'{command}\' not supported.")
             respond("ERROR:INVALIDCOMMAND")
