@@ -62,6 +62,20 @@ def status():
     else:
         print("ERROR: Command failed.")
 
+def available():
+    if len(sys.argv) != 2:
+        print("Invalid command format.")
+        sys.exit(1)
+    print("Valid command format.")
+    send('AVAILABLE')
+    file_amount = int(receive())
+    print(f"Listing files({file_amount}):")
+    for _ in range (0, file_amount):
+        send("CONTINUE")
+        file = receive()
+        print(f" - {file}")
+    print("Command succeeded")
+
 
 
 def main():
@@ -77,7 +91,7 @@ def main():
         case 'status':
             status()
         case 'available':
-            pass
+            available()
         case 'upload':
             pass
         case 'delete':
