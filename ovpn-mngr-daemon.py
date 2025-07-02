@@ -60,11 +60,11 @@ def terminate():
     if connection_active:
         process.kill()
         logger.info(inform(f"Killed still active openvpn connection."))
+    respond("TERMINATED")
     for pipe in [INPUT_PIPE, OUTPUT_PIPE]:
         os.remove(f"{pipe}")
         logger.info(inform(f"Removed pipe: \'{pipe}\'."))
     logger.info(inform("Daemon terminated."))
-    respond("TERMINATED")
     sys.exit(0)
 
 def status():
