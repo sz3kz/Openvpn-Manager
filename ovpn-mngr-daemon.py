@@ -20,3 +20,8 @@ for pipe in [INPUT_PIPE, OUTPUT_PIPE]:
         print(f"\'{pipe}\' deleted.")
     os.mkfifo(f"{pipe}")
     print(f"\'{pipe}\' created.")
+
+while True:
+    with open(f"{INPUT_PIPE}", 'r') as input_pipe:
+        command = input_pipe.read().strip()
+        print(f"Command: \'{command}\'")
