@@ -74,6 +74,18 @@ def current():
     current_file = os.path.basename(f"{current_path}")
     respond(f"{current_file}")
 
+def select():
+    respond("NAME?")
+    name = os.path.basename(f"{receive()}")
+    if not os.path.exists(f"{VPN_DIR}/{name}"):
+        print("Selected file: \'{VPN_DIR}/{name}\' does not exist.")
+        respond("ERROR:FILEDOESNOTEXIST")
+    print("Creating temporary link.")
+    os.symlink(f"{VPN_DIR}/{name}", f"{ROOT_MNGR_DIR}/temporarylink")
+    os.rename(f"{ROOT_MNGR_DIR}/temporarylink", f"{VPN_LINK}")
+    print("Symbolic link changed.")
+    respond("SUCCESS")
+
 
 if os.geteuid() != 0:
     print(f"Insufficient privileges.")
@@ -105,6 +117,8 @@ while True:
             upload()
         case "CURRENT":
             current()
+        case "SELECT":
+            select()
         case _:
             print(f"ERROR: command \'{command}\' not supported.")
             respond("ERROR:INVALIDCOMMAND")
