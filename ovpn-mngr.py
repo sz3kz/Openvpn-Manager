@@ -18,6 +18,12 @@ def receive():
         response = input_pipe.read().strip()
     return response
 
+def check_pipes():
+    for pipe in [INPUT_PIPE, OUTPUT_PIPE]:
+        if not os.path.exists(f"{pipe}"):
+            print(f"Error: Missing pipe: \'{pipe}\'.")
+            sys.exit(1)
+
 
 def terminate():
     if len(sys.argv) != 2:
@@ -41,6 +47,7 @@ def check_root_privileges():
 
 def main():
     check_root_privileges()
+    check_pipes()
     if len(sys.argv) == 1:
         print("No command found!")
         sys.exit(1)
