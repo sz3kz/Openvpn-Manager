@@ -174,7 +174,7 @@ def disconnect():
 
 
 def main():
-    check_root_privileges()
+    # check_root_privileges()
     check_pipes()
     if len(sys.argv) == 1:
         print("No command found!")
@@ -187,10 +187,10 @@ def main():
             status()
         case 'available':
             available()
-        case 'upload':
-            upload()
-        case 'delete':
-            delete()
+        #case 'upload':
+        #    upload()
+        #case 'delete':
+        #    delete()
         case 'current':
             current()
         case 'select':
