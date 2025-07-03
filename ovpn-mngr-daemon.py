@@ -107,8 +107,10 @@ def setup_pipes():
             logger.info(inform(f"Pipe deleted: \'{pipe}\'."))
         os.mkfifo(f"{pipe}")
         logger.info(inform(f"Pipe created: \'{pipe}\'."))
-        os.chmod(pipe, stat.S_IREAD | stat.S_IWRITE)
-        logger.info(inform("Pipe permissions modified."))
+    os.chmod(INPUT_PIPE, stat.S_IREAD | stat.S_IWRITE | stat.S_IRGRP | stat.S_IWGRP | stat.S_IWOTH)
+    logger.info(inform(f"Pipe permissions modified: \'{INPUT_PIPE}\'"))
+    os.chmod(OUTPUT_PIPE, stat.S_IREAD | stat.S_IWRITE | stat.S_IRGRP | stat.S_IWGRP | stat.S_IROTH)
+    logger.info(inform(f"Pipe permissions modified: \'{OUTPUT_PIPE}\'"))
     logger.info(success("Pipes set up."))
 
 def check_root_privileges():
