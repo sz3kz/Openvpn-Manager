@@ -432,10 +432,11 @@ def main():
                 status()
             case "AVAILABLE":
                 available()
-            case "UPLOAD":
-                upload()
-            case "DELETE":
-                delete()
+            #case "UPLOAD":
+            #    upload()
+            #    pass
+            #case "DELETE":
+            #    delete()
             case "CURRENT":
                 current()
             case "SELECT":
