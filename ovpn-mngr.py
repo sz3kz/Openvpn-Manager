@@ -55,7 +55,7 @@ def terminate():
     if response == "TERMINATED":
         print(success("Daemon terminated."))
         return
-    print(failure("Command failed."))
+    print(failure("Server error."))
 
 
 def status():
@@ -69,7 +69,7 @@ def status():
     elif response == "DISCONNECTED":
         print(inform("Connection: Off."))
     else:
-        print(failure("Command failed."))
+        print(failure("Server error."))
 
 def available():
     if len(sys.argv) != 2:
@@ -145,14 +145,18 @@ def select():
     send('SELECT')
     response = receive()
     if not response == 'NAME?':
-        print(failure("Command failed."))
+        print(failure("Server error."))
         sys.exit(1)
     send(f"{file}")
     response = receive()
-    if not response == 'SUCCESS':
-        print(failure("Command failed."))
+    if response == 'ERROR:FILEDOESNOTEXIST':
+        print(failure("Denoted file does not exist."))
         sys.exit(1)
-    print(success("File selected."))
+    if response == 'SUCCESS':
+        print(success("File selected."))
+        sys.exit(0)
+    print(success("Server error."))
+
 
 
 def connect():
@@ -161,10 +165,13 @@ def connect():
         sys.exit(1)
     send('CONNECT')
     response = receive()
-    if not response == 'SUCCESS':
-        print(failure("Command failed."))
+    if response == 'ERROR:CONNECTED':
+        print(failure("Connection already active."))
         sys.exit(1)
-    print(success("Connection established."))
+    if response == 'SUCCESS':
+        print(success("Connection established."))
+        sys.exit(0)
+    print(failure("Server error."))
 
 
 def disconnect():
@@ -173,10 +180,13 @@ def disconnect():
         sys.exit(1)
     send('DISCONNECT')
     response = receive()
-    if not response == 'SUCCESS':
-        print(failure("Command failed."))
+    if response == 'ERROR:DISCONNECTED':
+        print(failure("Connection not active."))
         sys.exit(1)
-    print(success("Connection severed."))
+    if response == 'SUCCESS':
+        print(success("Connection severed."))
+        sys.exit(1)
+    print(failure("Server error."))
 
 
 
